@@ -1,19 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:make_it_rain/widgets/custom_login_form.dart';
+import 'package:http/http.dart' as http;
 
-void main() => runApp(Login());
+import 'package:make_it_rain/pages/textField.dart';
 
-class Login extends StatelessWidget {
-  final String appTitle = "로그인";
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(title: appTitle, home: Scaffold(
-      appBar: AppBar(
-        title: Text(appTitle),
-      ),
-      backgroundColor:  Colors.blueGrey,
-      body: CustomLoginForm(),
-    ),);
+void main() async {
+  List _data = await getJSON();
+  
+  for(var i = 0; i<_data.length; i++){
+    print("Data: ${_data[i]["title"]}");
   }
+
+  runApp(MaterialApp(
+    title: "BMI",
+    home: Home(),
+  ));
 }
+
+Future<List> getJSON() async {
+  String url = "https://jsonplaceholder.typicode.com/posts";
+
+  http.Response response = await http.get(url);
+
+  return json.decode(response.body);
+} 
